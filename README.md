@@ -3,7 +3,6 @@
 **Coupon Management**
 
     Implementations and Assumptions -
-    
       1. Only a single coupon is applied at a time
       
       2. For each Coupon Name only a single type of coupon is attached, for example - consider coupon name "MONK" where only cart-wise coupon is attached and nothing else
@@ -11,6 +10,8 @@
       3. BxGy coupon when considered is only applied once when encountered. But for multiple occurences of this coupon have not implemented.
       
       4. Fixed prices throughout the Cart process.
+
+
 
     Code Shortcomings - 
       1. Have not handled duplicate coupon names
