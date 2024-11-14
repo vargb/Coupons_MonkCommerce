@@ -2,7 +2,7 @@
 
 **Coupon Management**
 
-    Implementations and Assumptions -
+A. Implementations and Assumptions -
     
       1. Only a single coupon is applied at a time   
       2. For each Coupon Name only a single type of coupon is attached, for example - consider coupon name "MONK" where only cart-wise coupon is attached and nothing else
@@ -10,8 +10,7 @@
       4. Fixed prices throughout the Cart process.
 
 
-
-    Code Shortcomings - 
+B. Code Shortcomings - 
     
       1. Have not handled duplicate coupon names
       2. Have not handled coupon/discount stacking i.e. handling multiple coupons at once, for example - Cart-wise coupons apply to entire cart, but certain products in the cart already have individual discounts or even other product or bxgy discounts. 
@@ -21,8 +20,8 @@
       6. Would improve this by implementing auth-based user login and roles so everybody has different carts.
       7. Would improve BxGy coupon and product-wise coupon logic
       8. Would improve coupon precedence structure i.e. which coupon to be applied if multiple coupons are applicable
-
-   Edge Cases or Potential Issues -
+      
+C. Edge Cases or Potential Issues -
    
      1. In coupons the price set is static and the underlying product may increase/decrease in value which should also invariably increase/decrease the coupon discount percentage  
      2. Real-time checking of inventory is not available and this may cause some issues in BxGy coupons.   
