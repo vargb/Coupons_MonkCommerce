@@ -17,32 +17,32 @@ func calculateDiscount(coupon storage.Coupon, cart storage.Cart) float64 {
 
 	switch coupon.Type {
 	case "cart-wise":
-		if cart.Total > coupon.ThresholdAmount {
-			discount = cart.Total * (coupon.DiscountPercent / 100)
+		if cart.Total > coupon.CartWiseRule.MinimumAmount {
+			discount = cart.Total * (coupon.CartWiseRule.Discount / 100)
 		}
 
 	case "product-wise":
 		for _, item := range cart.Items {
-			if contains(coupon.BuyArray, item.ProductID) {
-				discount += item.UnitPrice * float64(item.Quantity) * (coupon.DiscountPercent / 100)
+			if containsProducts(coupon.ProductWiseRule.Products, item.ProductID) {
+				discount += item.Price * float64(item.Quantity) * (coupon.ProductWiseRule.Discount / 100)
 			}
 		}
 
 	case "bxgy":
 		buyCount := 0
-		getEligibleItems := []CartItem{}
+		getEligibleItems := []storage.CartItem{}
 		for _, item := range cart.Items {
-			if contains(coupon.BuyArray, item.ProductID) {
+			if containsBuyGetProducts(coupon.BxGyRule.BuyProducts, item.ProductID) {
 				buyCount += item.Quantity
-			} else if contains(coupon.GetArray, item.ProductID) {
+			} else if containsBuyGetProducts(coupon.BxGyRule.GetProducts, item.ProductID) {
 				getEligibleItems = append(getEligibleItems, item)
 			}
 		}
-		applicableTimes := min(buyCount/coupon.X, coupon.RepetitionLimit)
-		freeItemsCount := applicableTimes * coupon.Y
+		applicableTimes := min(buyCount/len(coupon.BxGyRule.BuyProducts), coupon.BxGyRule.RepetitionLimit)
+		freeItemsCount := applicableTimes * len(coupon.BxGyRule.GetProducts)
 		for _, item := range getEligibleItems {
 			freeItemQty := min(item.Quantity, freeItemsCount)
-			discount += item.UnitPrice * float64(freeItemQty)
+			discount += item.Price * float64(freeItemQty)
 			freeItemsCount -= freeItemQty
 		}
 	}
@@ -53,6 +53,24 @@ func calculateDiscount(coupon storage.Coupon, cart storage.Cart) float64 {
 func contains(arr []string, str string) bool {
 	for _, v := range arr {
 		if v == str {
+			return true
+		}
+	}
+	return false
+}
+
+func containsBuyGetProducts(arr []storage.BxGyProduct, str string) bool {
+	for _, product := range arr {
+		if containsProducts(product.Products, str) {
+			return true
+		}
+	}
+	return false
+}
+
+func containsProducts(arr []storage.Product, str string) bool {
+	for _, product := range arr {
+		if product.Code == str {
 			return true
 		}
 	}
