@@ -3,6 +3,7 @@ package storage
 import (
 	"fmt"
 	"monkCommerce/config"
+	"time"
 
 	"github.com/lib/pq"
 	"gorm.io/driver/postgres"
@@ -17,14 +18,14 @@ type Product struct {
 }
 
 type Coupon struct {
-	Id         string `json:"id" gorm:"uniqueIndex;not null"`
-	Code       string `json:"code"`
-	Type       string `json:"type"`
-	ValidFrom  string `json:"valid_from"`
-	ValidUntil string `json:"valid_until"`
-	UsageLimit int    `json:"usage_limit"`
-	UsageCount int    `json:"usage_count"`
-	IsActive   bool   `json:"is_active"`
+	Id         string     `json:"id" gorm:"uniqueIndex;not null"`
+	Code       string     `json:"code"`
+	Type       string     `json:"type"`
+	ValidFrom  *time.Time `json:"valid_from"`
+	ValidUntil *time.Time `json:"valid_until"`
+	UsageLimit int        `json:"usage_limit"`
+	UsageCount int        `json:"usage_count"`
+	IsActive   bool       `json:"is_active"`
 
 	// Type-specific rules (only one will be used based on Type)
 	CartWiseRule    *CartWiseRule    `json:"cart_wise_rule,omitempty" gorm:"type:jsonb;"`
@@ -35,13 +36,11 @@ type Coupon struct {
 type CartWiseRule struct {
 	MinimumAmount float64 `json:"minimum_amount"`
 	Discount      float64 `json:"discount"`
-	IsPercentage  bool    `json:"is_percentage"`
 }
 
 type ProductWiseRule struct {
-	Discount     float64   `json:"discount"`
-	Products     []Product `json:"products"`
-	IsPercentage bool      `json:"is_percentage"`
+	Discount float64   `json:"discount"`
+	Products []Product `json:"products"`
 }
 
 type BxGyProduct struct {
